@@ -19,6 +19,7 @@
   "homepage": "https://github.com/cnmetro/weibo-function#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "date-fns": "^1.29.0",
     "fc-helper": "^2.1.3"
   }
 }
