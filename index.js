@@ -5,24 +5,30 @@ const format = require('date-fns/format')
 const { asyncWrap } = require('fc-helper')
 const { sendWeibo, fetchFlow } = require('./utils')
 
-exports.handler = asyncWrap(async event => {
+module.exports.handler = asyncWrap(async (request, response) => {
   const name = {
     bj: '北京',
     gz: '广州',
     sh: '上海'
   }
-  const evt = JSON.parse(event)
-  const city = evt['payload']
-  const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
 
-  if (!city) return
+  try {
+    const city = request.queries.city
+    const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
 
-  const data = await fetchFlow(city)
-  const date = data.date
+    if (!city) return response.send('City Empty')
 
-  if (yesterday !== date) return
+    const data = await fetchFlow(city)
+    const date = data.date
 
-  const status = `${name[city]}地铁 ${date} 总客流量为 ${data.num} 万人次 http://metro.sinchang.me/${city}`
+    if (yesterday !== date) return response.send('No Update')
 
-  await sendWeibo(status)
+    const status = `${name[city]}地铁 ${date} 总客流量为 ${data.num} 万人次 http://metro.sinchang.me/${city}`
+
+    await sendWeibo(status)
+
+    response.send('OK')
+  } catch (e) {
+    response.send(e.message)
+  }
 })

@@ -10,22 +10,3 @@ Resources:
         Runtime: nodejs8
         Description: 'weibo bot'
         CodeUri: './'
-      Events:
-        TmTriggerSH:
-          Type: Timer
-          Properties:
-            Payload: 'sh'
-            CronExpression: '0 15 4 * * *'
-            Enable: true
-        TmTriggerBJ:
-          Type: Timer
-          Properties:
-            Payload: 'bj'
-            CronExpression: '0 18 4 * * *'
-            Enable: true
-        TmTriggerGZ:
-          Type: Timer
-          Properties:
-            Payload: 'gz'
-            CronExpression: '0 21 4 * * *'
-            Enable: true
