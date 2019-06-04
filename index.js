@@ -2,33 +2,41 @@
 
 const subDays = require('date-fns/sub_days')
 const format = require('date-fns/format')
-const { asyncWrap } = require('fc-helper')
 const { sendWeibo, fetchFlow } = require('./utils')
 
-module.exports.handler = asyncWrap(async (request, response) => {
-  const name = {
-    bj: '北京',
-    gz: '广州',
-    sh: '上海'
+const cities = [
+  {
+    key: 'sh',
+    value: '上海'
+  },
+  {
+    key: 'bj',
+    value: '北京'
+  },
+  {
+    key: 'sh',
+    value: '广州'
   }
+]
 
-  try {
-    const city = request.queries.city
-    const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
+console.log(process.env)
 
-    if (!city) return response.send('City Empty')
+// ;(async () => {
+//   for (const city of cities) {
+//     try {
+//       const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
+//       const data = await fetchFlow(city.key)
+//       const date = data.date
 
-    const data = await fetchFlow(city)
-    const date = data.date
+//       if (yesterday !== date) return
 
-    if (yesterday !== date) return response.send('No Update')
+//       const status = `${city.name}地铁 ${date} 总客流量为 ${
+//         data.num
+//       } 万人次 http://metro.sinchang.me/${city.key}`
 
-    const status = `${name[city]}地铁 ${date} 总客流量为 ${data.num} 万人次 http://metro.sinchang.me/${city}`
-
-    await sendWeibo(status)
-
-    response.send('OK')
-  } catch (e) {
-    response.send(e.message)
-  }
-})
+//       await sendWeibo(status)
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   }
+// })()
