@@ -19,24 +19,22 @@ const cities = [
   }
 ]
 
-console.log(process.env)
+;(async () => {
+  for (const city of cities) {
+    try {
+      const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
+      const data = await fetchFlow(city.key)
+      const date = data.date
 
-// ;(async () => {
-//   for (const city of cities) {
-//     try {
-//       const yesterday = format(subDays(new Date(), 1), 'YYYY-MM-DD')
-//       const data = await fetchFlow(city.key)
-//       const date = data.date
+      if (yesterday !== date) return
 
-//       if (yesterday !== date) return
+      const status = `${city.name}地铁 ${date} 总客流量为 ${
+        data.num
+      } 万人次 http://metro.sinchang.me/${city.key}`
 
-//       const status = `${city.name}地铁 ${date} 总客流量为 ${
-//         data.num
-//       } 万人次 http://metro.sinchang.me/${city.key}`
-
-//       await sendWeibo(status)
-//     } catch (e) {
-//       console.log(e)
-//     }
-//   }
-// })()
+      await sendWeibo(status)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+})()
