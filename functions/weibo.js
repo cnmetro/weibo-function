@@ -1,6 +1,6 @@
 const subDays = require('date-fns/sub_days')
 const format = require('date-fns/format')
-const { sendWeibo, fetchFlow } = require('../utils')
+const { sendWeibo, fetchFlow, sendAlert } = require('../utils')
 
 exports.handler = async (event, context, callback) => {
   const cityObject = {	  
@@ -36,6 +36,7 @@ exports.handler = async (event, context, callback) => {
       body: 'Yep',
     })
   } catch (e) {
+    sendAlert('failed on sending weibo')
     callback(null, {
       statusCode: 500,
       body: JSON.stringify((e.response && e.response.data)) || e.message,

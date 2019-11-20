@@ -18,3 +18,7 @@ exports.fetchFlow = city => {
     .get(`http://metro.sinchang.me/api/flows?city=${city}`)
     .then(res => res.data.data[0])
 }
+
+exports.sendAlert = text => {
+  return axios.get(`https://sfuns.netlify.com/.netlify/functions/contact?text=${text}`)
+}
